@@ -1,0 +1,25 @@
+{
+  "name": "Qoder CLI",
+  "id": "qodercli",
+  "version": "1.0.0",
+  "description": "Installs the Qoder CLI globally (supports both Global and China editions)",
+  "options": {
+    "edition": {
+      "type": "string",
+      "proposals": [
+        "global",
+        "cn"
+      ],
+      "default": "global",
+      "description": "Qoder CLI edition to install. 'global' installs from qoder.com, 'cn' installs from qoder.com.cn."
+    }
+  },
+  "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/main/src/qodercli",
+  "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/main/LICENSE",
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+  "installsAfter": []
+}

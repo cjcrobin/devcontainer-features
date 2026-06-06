@@ -1,0 +1,16 @@
+{
+    "basic": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "qodercli": {}
+        }
+    },
+    "cn": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "qodercli": {
+                "edition": "cn"
+            }
+        }
+    }
+}
