@@ -91,28 +91,61 @@ install_qodercli() {
             ;;
     esac
 
+    # Install normally — files go to $HOME (=/root during Docker build):
+    #   $HOME/.local/bin/<cmd>   → entry-point script
+    #   $HOME/.qoder/bin/<cmd>/  → versioned binary
     curl -fsSL "$install_url" | bash
 
-    # Source profile to pick up PATH changes made by the installer
-    if [ -f /root/.profile ]; then
-        . /root/.profile 2>/dev/null || true
-    fi
-
-    # Also check common install locations directly
+    # Verify installation (build runs as root, so $HOME=/root)
     export PATH="$HOME/.local/bin:$HOME/.qoder/bin:$PATH"
 
-    if command -v "$cmd_name" >/dev/null; then
-        echo "Qoder CLI ($edition) installed successfully!"
-        "$cmd_name" --version || true
-        return 0
-    elif [ -x "$HOME/.local/bin/$cmd_name" ]; then
-        echo "Qoder CLI ($edition) installed successfully!"
-        "$HOME/.local/bin/$cmd_name" --version || true
-        return 0
-    else
+    if ! command -v "$cmd_name" >/dev/null 2>&1; then
         echo "ERROR: Qoder CLI ($edition) installation failed!"
         return 1
     fi
+
+    echo "Qoder CLI ($edition) installed successfully!"
+    "$cmd_name" --version || true
+
+    # ── Copy to system-wide location ─────────────────────────────
+    # /root/ is not accessible to other users (e.g. vscode), so we
+    # copy everything to /usr/local/ where all users can reach it.
+
+    local qoder_src="$HOME/.qoder"
+
+    # 1) Copy .qoder data directory to /usr/local/lib/
+    if [ -d "$qoder_src" ]; then
+        cp -r "$qoder_src" /usr/local/lib/qoder
+        chmod -R a+rX /usr/local/lib/qoder
+        echo "Copied $qoder_src -> /usr/local/lib/qoder"
+    fi
+
+    # 2) Copy the versioned binary to /usr/local/bin/
+    if [ -d "$qoder_src/bin/$cmd_name" ]; then
+        for bin_file in "$qoder_src/bin/$cmd_name"/*; do
+            if [ -f "$bin_file" ] && [ -x "$bin_file" ]; then
+                cp "$bin_file" "/usr/local/bin/"
+                chmod a+rx "/usr/local/bin/$(basename "$bin_file")"
+                echo "Copied binary $(basename "$bin_file") -> /usr/local/bin/"
+            fi
+        done
+    fi
+
+    # 3) Copy entry-point to /usr/local/bin/ and patch paths
+    if [ -f "$HOME/.local/bin/$cmd_name" ]; then
+        cp "$HOME/.local/bin/$cmd_name" "/usr/local/bin/$cmd_name"
+        chmod a+rx "/usr/local/bin/$cmd_name"
+
+        # Patch the entry-point: replace $HOME/.qoder and /root/.qoder
+        # with the shared /usr/local/lib/qoder path
+        sed -i "s|$HOME/.qoder|/usr/local/lib/qoder|g" "/usr/local/bin/$cmd_name" 2>/dev/null || true
+        sed -i 's|\$HOME/\.qoder|/usr/local/lib/qoder|g' "/usr/local/bin/$cmd_name" 2>/dev/null || true
+
+        echo "Copied and patched entry-point -> /usr/local/bin/$cmd_name"
+    fi
+
+    echo "Qoder CLI ($edition) is now available system-wide at /usr/local/bin/$cmd_name"
+    return 0
 }
 
 # Main script starts here
