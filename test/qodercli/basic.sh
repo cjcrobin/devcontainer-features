@@ -2,9 +2,6 @@
 
 set -e
 
-# Ensure PATH includes common Qoder CLI install locations
-export PATH="$HOME/.local/bin:$HOME/.qoder/bin:$PATH"
-
 # Test if Qoder CLI (Global) is installed
 if ! command -v qodercli &> /dev/null; then
     echo "qodercli command not found"
