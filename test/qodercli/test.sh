@@ -2,6 +2,9 @@
 
 set -e
 
+# Ensure PATH includes common Qoder CLI install locations
+export PATH="$HOME/.local/bin:$HOME/.qoder/bin:$PATH"
+
 # Optional: Import test library
 source dev-container-features-test-lib
 

@@ -93,9 +93,21 @@ install_qodercli() {
 
     curl -fsSL "$install_url" | bash
 
+    # Source profile to pick up PATH changes made by the installer
+    if [ -f /root/.profile ]; then
+        . /root/.profile 2>/dev/null || true
+    fi
+
+    # Also check common install locations directly
+    export PATH="$HOME/.local/bin:$HOME/.qoder/bin:$PATH"
+
     if command -v "$cmd_name" >/dev/null; then
         echo "Qoder CLI ($edition) installed successfully!"
         "$cmd_name" --version || true
+        return 0
+    elif [ -x "$HOME/.local/bin/$cmd_name" ]; then
+        echo "Qoder CLI ($edition) installed successfully!"
+        "$HOME/.local/bin/$cmd_name" --version || true
         return 0
     else
         echo "ERROR: Qoder CLI ($edition) installation failed!"

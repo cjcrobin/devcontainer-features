@@ -2,6 +2,9 @@
 
 set -e
 
+# Ensure PATH includes common Qoder CLI install locations
+export PATH="$HOME/.local/bin:$HOME/.qoder/bin:$PATH"
+
 # Test if Qoder CLI (CN) is installed
 if ! command -v qoderclicn &> /dev/null; then
     echo "qoderclicn command not found"
