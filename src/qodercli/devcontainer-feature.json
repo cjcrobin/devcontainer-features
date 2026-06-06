@@ -14,8 +14,8 @@
       "description": "Qoder CLI edition to install. 'global' installs from qoder.com, 'cn' installs from qoder.com.cn."
     }
   },
-  "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/main/src/qodercli",
-  "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/main/LICENSE",
+  "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/master/src/qodercli",
+  "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/master/LICENSE",
   "customizations": {
     "vscode": {
       "extensions": []
