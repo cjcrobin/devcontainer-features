@@ -1,0 +1,30 @@
+{
+    "basic": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "claudecode": {}
+        }
+    },
+    "with_global_config": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "claudecode": {
+                "globalConfigHome": "${localEnv:HOME}/claude-test-global"
+            }
+        }
+    },
+    "with_project_config": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "claudecode": {
+                "projectConfigFolder": "${localEnv:HOME}/claude-test-project"
+            }
+        }
+    },
+    "alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "claudecode": {}
+        }
+    }
+}
