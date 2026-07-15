@@ -28,16 +28,12 @@ Any other files or directories in `.claude/` (on either side) are intentionally 
 
 ### Path resolution
 
-The `_CLAUDE_HOST_HOME` container env var (set to `${localEnv:HOME}` via `containerEnv`) lets the setup script compute where within the mount a custom `globalConfigHome` or `projectConfigFolder` lives:
+`globalConfigHome` and `projectConfigFolder` accept paths **relative to the host home directory**.  An empty value (the default) means the host home directory itself.  The bind mount maps host HOME → `/tmp/.devcontainer-host-home`, so the setup script appends the relative path directly:
 
 ```
-hostPath = /Users/jingci/claude-settings
-hostHome = /Users/jingci  (_CLAUDE_HOST_HOME)
-relative = claude-settings
-mounted  = /tmp/.devcontainer-host-home/claude-settings
+option value    = claude-settings          (relative to host HOME)
+mounted path    = /tmp/.devcontainer-host-home/claude-settings
 ```
-
-Paths outside host `HOME` trigger a warning and fall back to the host home root.
 
 ### Symlink behaviour
 

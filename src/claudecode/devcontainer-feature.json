@@ -12,12 +12,12 @@
     "globalConfigHome": {
       "type": "string",
       "default": "",
-      "description": "Absolute host path whose .claude/ sub-directory and .claude.json are linked into the container's ~/.claude/ and ~/.claude.json. Defaults to the host user's home directory (~). Must be inside the host home directory."
+      "description": "Path relative to the host home directory whose .claude/ sub-directory and .claude.json are linked into the container's ~/.claude/ and ~/.claude.json. Defaults to the host home directory itself (empty string = home root)."
     },
     "projectConfigFolder": {
       "type": "string",
       "default": "",
-      "description": "Absolute host path whose .claude/ sub-directory and .claude.json are linked into ${workspaceFolder}/.claude/ and ${workspaceFolder}/.claude.json. Leave empty to skip project-level config. Must be inside the host home directory."
+      "description": "Path relative to the host home directory whose .claude/ sub-directory and .claude.json are linked into ${workspaceFolder}/.claude/ and ${workspaceFolder}/.claude.json. Leave empty to skip project-level config."
     }
   },
   "mounts": [
@@ -27,9 +27,6 @@
       "type": "bind"
     }
   ],
-  "containerEnv": {
-    "_CLAUDE_HOST_HOME": "${localEnv:HOME}"
-  },
   "postCreateCommand": "/usr/local/share/claude-devcontainer/setup.sh",
   "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/master/src/claudecode",
   "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/master/LICENSE",

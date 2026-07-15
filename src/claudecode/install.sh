@@ -138,42 +138,22 @@ CLAUDE_ITEMS="agents skills hooks rules Claude.md settings.json"
 # The host HOME is bind-mounted here by the devcontainer feature.
 HOST_HOME_MOUNT="/tmp/.devcontainer-host-home"
 
-# The actual host HOME path is injected via containerEnv (_CLAUDE_HOST_HOME).
-REAL_HOST_HOME="${_CLAUDE_HOST_HOME:-}"
-
 # ---------------------------------------------------------------------------
-# resolve_in_mount <host_abs_path>
-#   Translates a full host absolute path to its location within the host-home
-#   bind mount.  Paths outside host HOME fall back to the mount root with a
-#   warning.  An empty path defaults to the mount root (= host HOME).
+# resolve_in_mount <relative_path>
+#   Returns the path within the host-home bind mount for a given relative
+#   path (relative to host home directory).  An empty path defaults to the
+#   mount root (= host HOME itself).
 # ---------------------------------------------------------------------------
 resolve_in_mount() {
-    abs="$1"
+    rel="$1"
 
-    if [ -z "$abs" ]; then
+    if [ -z "$rel" ]; then
         echo "$HOST_HOME_MOUNT"
         return
     fi
 
-    if [ -z "$REAL_HOST_HOME" ]; then
-        echo "WARNING: _CLAUDE_HOST_HOME is not set; cannot resolve '$abs'" >&2
-        echo "$HOST_HOME_MOUNT"
-        return
-    fi
-
-    case "$abs" in
-        "$REAL_HOST_HOME")
-            echo "$HOST_HOME_MOUNT"
-            ;;
-        "$REAL_HOST_HOME/"*)
-            echo "$HOST_HOME_MOUNT/${abs#$REAL_HOST_HOME/}"
-            ;;
-        *)
-            printf 'WARNING: "%s" is outside host HOME ("%s"). Falling back to host HOME.\n' \
-                "$abs" "$REAL_HOST_HOME" >&2
-            echo "$HOST_HOME_MOUNT"
-            ;;
-    esac
+    # Strip any accidental leading slash so paths are truly relative.
+    echo "$HOST_HOME_MOUNT/${rel#/}"
 }
 
 # ---------------------------------------------------------------------------
