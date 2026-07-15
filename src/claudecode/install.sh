@@ -2,8 +2,8 @@
 set -eu
 
 VERSION="${VERSION:-latest}"
-GLOBAL_CONFIG_HOME="${GLOBAL_CONFIG_HOME:-}"
-PROJECT_CONFIG_FOLDER="${PROJECT_CONFIG_FOLDER:-}"
+GLOBAL_CONFIG_HOME="${GLOBALCONFIGHOME:-}"
+PROJECT_CONFIG_FOLDER="${PROJECTCONFIGFOLDER:-}"
 
 # ---------------------------------------------------------------------------
 # Package manager helpers
@@ -73,19 +73,12 @@ ensure_node_npm() {
 
     case "$pkg_manager" in
         apt)
-            # Use the NodeSource repository to get a supported LTS release.
-            install_packages apt ca-certificates curl gnupg
-            mkdir -p /etc/apt/keyrings
-            curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-                | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-            echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
-                > /etc/apt/sources.list.d/nodesource.list
-            apt-get update -y
+            # Use the NodeSource setup script which handles GPG, repo, and
+            # apt pinning so that NodeSource's nodejs (bundled with npm) is
+            # preferred over any distro-provided nodejs package.
+            install_packages apt ca-certificates curl
+            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
             install_packages apt nodejs
-            # Ubuntu 24.04+ ships nodejs without npm — install npm if still absent.
-            if ! command -v npm >/dev/null 2>&1; then
-                install_packages apt npm
-            fi
             ;;
         apk)
             # Alpine 3.17+ ships Node.js 18+.
