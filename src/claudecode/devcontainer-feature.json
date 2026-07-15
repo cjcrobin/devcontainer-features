@@ -20,6 +20,9 @@
       "description": "Path relative to the host home directory whose .claude/ sub-directory and .claude.json are linked into ${workspaceFolder}/.claude/ and ${workspaceFolder}/.claude.json. Leave empty to skip project-level config."
     }
   },
+  "containerEnv": {
+    "_CLAUDE_HOST_HOME": "/tmp/.devcontainer-host-home"
+  },
   "mounts": [
     {
       "source": "${localEnv:HOME}",

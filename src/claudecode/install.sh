@@ -41,16 +41,35 @@ install_packages() {
 ensure_node_npm() {
     pkg_manager="$1"
 
-    if command -v node >/dev/null 2>&1 && command -v npm >/dev/null 2>&1; then
+    # Check whether an acceptable Node.js is already present.
+    node_ok=0
+    if command -v node >/dev/null 2>&1; then
         node_major=$(node --version 2>/dev/null | sed 's/v//' | cut -d. -f1)
         if [ "${node_major:-0}" -ge 18 ] 2>/dev/null; then
+            node_ok=1
+        fi
+    fi
+
+    if [ "$node_ok" = "1" ]; then
+        if command -v npm >/dev/null 2>&1; then
             echo "Node.js $(node --version) and npm $(npm --version) already available."
             return 0
         fi
-        echo "Node.js $(node --version) is too old (need >= 18). Installing a newer version..."
-    else
-        echo "Node.js / npm not found. Installing Node.js 20 LTS..."
+        # Node.js is present and new enough, but npm is missing (common on
+        # Ubuntu 24.04+ where the distro nodejs package omits npm).
+        echo "Node.js $(node --version) found but npm missing — installing npm separately..."
+        case "$pkg_manager" in
+            apt)     install_packages apt npm ;;
+            apk)     install_packages apk npm ;;
+            dnf|yum) install_packages "$pkg_manager" npm ;;
+            *)       echo "ERROR: Cannot install npm: unsupported package manager." >&2; return 1 ;;
+        esac
+        echo "Node.js $(node --version) and npm $(npm --version) installed."
+        return 0
     fi
+
+    # Node.js is absent or too old — install a fresh LTS release.
+    echo "Node.js not found or too old (need >= 18). Installing Node.js 20 LTS..."
 
     case "$pkg_manager" in
         apt)
@@ -63,6 +82,10 @@ ensure_node_npm() {
                 > /etc/apt/sources.list.d/nodesource.list
             apt-get update -y
             install_packages apt nodejs
+            # Ubuntu 24.04+ ships nodejs without npm — install npm if still absent.
+            if ! command -v npm >/dev/null 2>&1; then
+                install_packages apt npm
+            fi
             ;;
         apk)
             # Alpine 3.17+ ships Node.js 18+.
@@ -136,7 +159,8 @@ set -eu
 CLAUDE_ITEMS="agents skills hooks rules Claude.md settings.json"
 
 # The host HOME is bind-mounted here by the devcontainer feature.
-HOST_HOME_MOUNT="/tmp/.devcontainer-host-home"
+# _CLAUDE_HOST_HOME is injected via containerEnv; fall back to the default path.
+HOST_HOME_MOUNT="${_CLAUDE_HOST_HOME:-/tmp/.devcontainer-host-home}"
 
 # ---------------------------------------------------------------------------
 # resolve_in_mount <relative_path>
