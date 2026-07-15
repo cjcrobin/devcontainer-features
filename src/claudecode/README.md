@@ -1,60 +1,66 @@
-# Claude Code
 
-Installs the [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (`@anthropic-ai/claude-code`) globally via npm. Automatically installs Node.js 20 LTS if a compatible version (>= 18) is not already present.
+# Claude Code (claudecode)
+
+Installs Claude Code CLI (@anthropic-ai/claude-code) globally via npm. Mounts selected Claude config files from the host machine into the container at creation time.
+
+## Example Usage
+
+```json
+"features": {
+    "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {}
+}
+```
 
 ## Options
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `version` | string | `latest` | Version of `@anthropic-ai/claude-code` to install. Accepts any valid npm version tag (e.g. `latest`, `1.0.17`). |
-| `configHome` | string | _(empty)_ | Parent directory for `.claude/` and `.claude.json`. Leave empty to use the default `~`. When set, a `/etc/profile.d` script creates symlinks at login time so config persists in a shared or mounted directory. |
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| version | Version of @anthropic-ai/claude-code to install (e.g. 'latest', '1.0.17'). Passed directly to 'npm install -g'. | string | latest |
+| globalConfigHome | Path relative to the host home directory whose .claude/ sub-directory and .claude.json are linked into the container's ~/.claude/ and ~/.claude.json. Defaults to the host home directory itself (empty string = home root). | string | - |
+| projectConfigFolder | Path relative to the host home directory whose .claude/ sub-directory and .claude.json are linked into ${workspaceFolder}/.claude/ and ${workspaceFolder}/.claude.json. Leave empty to skip project-level config. | string | - |
 
-## Usage
+# Claude Code
 
-```jsonc
-// .devcontainer/devcontainer.json
-{
-  "features": {
-    "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {}
-  }
-}
+Installs the `@anthropic-ai/claude-code` npm package globally so the `claude` binary is available system-wide inside the container.
+
+## Node.js requirement
+
+Claude Code requires Node.js >= 18. If no compatible Node.js is detected at build time, the feature installs **Node.js 20 LTS** via:
+
+- **Debian/Ubuntu**: NodeSource `node_20.x` repository
+- **Alpine**: `apk add nodejs npm`
+- **RHEL/Fedora/CentOS**: `dnf`/`yum` distribution packages
+
+## Host config mounting
+
+The feature adds a bind mount of `${localEnv:HOME}` (host home directory) to `/tmp/.devcontainer-host-home` inside the container. This mount is established by Docker before the container starts and is therefore available during all lifecycle hooks.
+
+During `postCreateCommand`, `/usr/local/share/claude-devcontainer/setup.sh` runs as the `remoteUser` and creates selective symlinks:
+
+- **Global**: `{globalConfigHome}/.claude/{item}` → `~/.claude/{item}` for each known item that exists on the host
+- **Global**: `{globalConfigHome}/.claude.json` → `~/.claude.json` if the file exists
+- **Project** (when `projectConfigFolder` is set): same pattern but into `${workspaceFolder}/`
+
+### Known item list
+
+`agents`, `skills`, `hooks`, `rules`, `Claude.md`, `settings.json`
+
+Any other files or directories in `.claude/` (on either side) are intentionally left untouched.
+
+### Path resolution
+
+`globalConfigHome` and `projectConfigFolder` accept paths **relative to the host home directory**.  An empty value (the default) means the host home directory itself.  The bind mount maps host HOME → `/tmp/.devcontainer-host-home`, so the setup script appends the relative path directly:
+
+```
+option value    = claude-settings          (relative to host HOME)
+mounted path    = /tmp/.devcontainer-host-home/claude-settings
 ```
 
-### With a custom config directory
+### Symlink behaviour
 
-Useful when `.claude/` and `.claude.json` should be stored in a bind-mounted workspace so settings survive container rebuilds:
+Because the symlink targets are inside the bind mount, writes from the container (e.g., Claude Code updating `settings.json`) propagate back to the host file system immediately.
 
-```jsonc
-{
-  "features": {
-    "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {
-      "configHome": "/workspaces/myproject"
-    }
-  }
-}
-```
 
-At first login the profile script will create:
+---
 
-```
-/workspaces/myproject/.claude/      ← symlinked from ~/.claude
-/workspaces/myproject/.claude.json  ← symlinked from ~/.claude.json
-```
-
-## Supported Linux distributions
-
-Node.js is installed through the appropriate package manager:
-
-| Distribution family | Package manager | Node.js source |
-|---|---|---|
-| Debian / Ubuntu | `apt-get` | NodeSource (node_20.x) |
-| Alpine | `apk` | Alpine repositories |
-| RHEL / Fedora / CentOS | `dnf` / `yum` | Distribution repositories |
-
-If Node.js >= 18 is already present (e.g. installed by another feature), the existing installation is reused.
-
-## Notes
-
-- The `claude` binary is installed globally and available to all users.
-- The `configHome` symlinks are created lazily at login via `/etc/profile.d/claude-config-home.sh`. If the target directory does not exist yet (e.g. a workspace volume not yet mounted), the script retries on the next login.
-- First use of `claude` will prompt for authentication with your Anthropic account.
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/cjcrobin/devcontainer-features/blob/main/src/claudecode/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
