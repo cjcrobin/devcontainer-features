@@ -52,7 +52,7 @@ ensure_node_npm() {
 
     if [ "$node_ok" = "1" ]; then
         if command -v npm >/dev/null 2>&1; then
-            echo "Node.js $(node --version) and npm $(npm --version) already available."
+            echo "Node.js $(node --version) and npm $(npm --version) already available — skipping installation."
             return 0
         fi
         # Node.js is present and new enough, but npm is missing (common on

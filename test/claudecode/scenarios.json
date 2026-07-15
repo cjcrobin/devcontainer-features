@@ -21,6 +21,12 @@
             }
         }
     },
+    "with_preinstalled_node": {
+        "image": "node:20-bookworm",
+        "features": {
+            "claudecode": {}
+        }
+    },
     "alpine": {
         "image": "mcr.microsoft.com/devcontainers/base:alpine",
         "features": {
