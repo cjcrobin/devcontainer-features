@@ -1,16 +1,70 @@
 # Dev Container Features
 
-This repository contains [Dev Container Features](https://containers.dev/implementors/features/) for installing Qoder CLI tools in development containers.
+This repository contains [Dev Container Features](https://containers.dev/implementors/features/) for development containers.
 
 ## Features
 
 | Feature | Description | Usage |
 |---------|-------------|-------|
+| [claudecode](src/claudecode) | Claude Code CLI (`@anthropic-ai/claude-code`) | `ghcr.io/cjcrobin/devcontainer-features/claudecode:1` |
 | [qodercli](src/qodercli) | Qoder CLI (Global & China editions) | `ghcr.io/cjcrobin/devcontainer-features/qodercli:1` |
 
 ## Usage
 
 Add the feature to your `devcontainer.json`:
+
+### Claude Code — Default
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {}
+    }
+}
+```
+
+### Claude Code — Pinned version
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {
+            "version": "1.0.17"
+        }
+    }
+}
+```
+
+### Claude Code — With host config mounted
+
+Mounts `.claude/` and `.claude.json` from the host so credentials and settings survive container rebuilds:
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/claudecode:1": {
+            "globalConfigHome": "/host/home/username",
+            "projectConfigFolder": "/host/home/username/myproject"
+        }
+    }
+}
+```
+
+### Claude Code Options
+
+| Option | Description | Default |
+|--------|-------------|--------|
+| `version` | Version of `@anthropic-ai/claude-code` to install (e.g. `latest`, `1.0.17`) | `latest` |
+| `globalConfigHome` | Host path whose `.claude/` and `.claude.json` are linked into `~/.claude/` and `~/.claude.json` | `""` (uses `~`) |
+| `projectConfigFolder` | Host path whose `.claude/` and `.claude.json` are linked into `${workspaceFolder}` | `""` (skipped) |
+
+---
 
 ### Qoder CLI — Global Edition (default)
 
@@ -52,9 +106,10 @@ devcontainer features publish ./src --namespace cjcrobin/devcontainer-features
 
 ## Testing
 
-### Test the feature
+### Test a specific feature
 
 ```bash
+devcontainer features test -f claudecode .
 devcontainer features test -f qodercli .
 ```
 
@@ -79,12 +134,25 @@ devcontainer features test --skip-scenarios -f qodercli -i mcr.microsoft.com/dev
 │       ├── release.yaml    # Publish features to GHCR
 │       └── test.yaml       # CI test workflow
 ├── src/
+│   ├── claudecode/         # Claude Code CLI feature
+│   │   ├── devcontainer-feature.json
+│   │   ├── install.sh
+│   │   ├── NOTES.md
+│   │   └── README.md
 │   └── qodercli/           # Qoder CLI feature (Global & CN)
 │       ├── devcontainer-feature.json
 │       ├── install.sh
 │       ├── NOTES.md
 │       └── README.md
 ├── test/
+│   ├── claudecode/         # Tests for claudecode
+│   │   ├── alpine.sh
+│   │   ├── basic.sh
+│   │   ├── scenarios.json
+│   │   ├── test.sh
+│   │   ├── with_config_home.sh
+│   │   ├── with_global_config.sh
+│   │   └── with_project_config.sh
 │   └── qodercli/           # Tests for qodercli
 │       ├── basic.sh
 │       ├── cn.sh
