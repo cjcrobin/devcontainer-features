@@ -1,7 +1,7 @@
 {
   "name": "Claude Code",
   "id": "claudecode",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Installs Claude Code CLI (@anthropic-ai/claude-code) globally via npm. Mounts selected Claude config files from the host machine into the container at creation time.",
   "options": {
     "version": {
