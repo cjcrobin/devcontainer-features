@@ -126,9 +126,11 @@ create_claude_dirs() {
     target_home="${_REMOTE_USER_HOME:-$HOME}"
     target_user="${_REMOTE_USER:-$(id -un)}"
     mkdir -p "$target_home/.claude"
-    chown "$target_user:$target_user" "$target_home/.claude"
+    # Use "user:" (trailing colon) so chown resolves the user's primary group
+    # automatically — avoids failures when the group name differs from username.
+    chown "$target_user:" "$target_home/.claude"
     chmod 700 "$target_home/.claude"
-    echo "Created $target_home/.claude"
+    echo "Created $target_home/.claude (owner: $target_user, mode: 700)"
 }
 
 # ---------------------------------------------------------------------------
