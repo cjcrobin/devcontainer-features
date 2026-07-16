@@ -9,8 +9,8 @@ If a compatible Node.js version (>= 18) is not already present, the feature inst
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `version` | string | `latest` | Version of `@anthropic-ai/claude-code` to install. Accepts any valid npm version tag (for example `latest`, `1.0.17`). |
-| `globalConfigHome` | string | _(empty)_ | Path relative to the host home directory. The feature links `.claude/` items and `.claude.json` from this location into container `~/.claude/` and `~/.claude.json`. Empty means host home root. |
-| `projectConfigFolder` | string | _(empty)_ | Path relative to the host home directory. When set, the same `.claude/` items and `.claude.json` are linked into `${workspaceFolder}/.claude/` and `${workspaceFolder}/.claude.json`. Leave empty to skip project-level config. |
+| `globalConfigHome` | string | _(empty)_ | Relative or absolute path. Relative paths are resolved under the host home directory; absolute paths are used as-is inside the container. The feature links `.claude/` items and `.claude.json` from this location into container `~/.claude/` and `~/.claude.json`. Empty means host home root. |
+| `projectConfigFolder` | string | _(empty)_ | Relative or absolute path. Relative paths are resolved under the host home directory; absolute paths are used as-is inside the container. When set, the same `.claude/` items and `.claude.json` are linked into `${workspaceFolder}/.claude/` and `${workspaceFolder}/.claude.json`. Leave empty to skip project-level config. |
 
 ## Usage
 
@@ -100,5 +100,5 @@ If a destination exists as a non-symlink file or directory, it is not overwritte
 
 - The `claude` binary is installed globally and available to all users.
 - Config linking runs in `postCreateCommand`, not from `/etc/profile.d`.
-- `globalConfigHome` and `projectConfigFolder` are resolved as paths relative to host home.
+- `globalConfigHome` and `projectConfigFolder` accept relative paths (resolved under host home) or absolute container paths.
 - First use of `claude` will prompt for authentication with your Anthropic account.

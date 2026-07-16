@@ -156,10 +156,14 @@ CLAUDE_ITEMS="agents skills hooks rules Claude.md settings.json"
 HOST_HOME_MOUNT="${_CLAUDE_HOST_HOME:-/tmp/.devcontainer-host-home}"
 
 # ---------------------------------------------------------------------------
-# resolve_in_mount <relative_path>
-#   Returns the path within the host-home bind mount for a given relative
-#   path (relative to host home directory).  An empty path defaults to the
-#   mount root (= host HOME itself).
+# resolve_in_mount <path>
+#   Returns the effective container path for a given option value.
+#
+#   - Empty string   → host-home bind-mount root (= host HOME itself).
+#   - Absolute path  → used as-is (container-absolute; useful when the user
+#                      has added their own bind mounts in devcontainer.json).
+#   - Relative path  → joined with the host-home bind-mount root so the path
+#                      is relative to the host home directory.
 # ---------------------------------------------------------------------------
 resolve_in_mount() {
     rel="$1"
@@ -169,8 +173,13 @@ resolve_in_mount() {
         return
     fi
 
-    # Strip any accidental leading slash so paths are truly relative.
-    echo "$HOST_HOME_MOUNT/${rel#/}"
+    # Absolute path — use directly without prepending the mount root.
+    case "$rel" in
+        /*) echo "$rel"; return ;;
+    esac
+
+    # Relative path — resolve under the host-home bind mount.
+    echo "$HOST_HOME_MOUNT/$rel"
 }
 
 # ---------------------------------------------------------------------------

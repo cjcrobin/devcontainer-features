@@ -32,12 +32,15 @@ Any other files or directories in `.claude/` (on either side) are intentionally 
 
 ### Path resolution
 
-`globalConfigHome` and `projectConfigFolder` accept paths **relative to the host home directory**.  An empty value (the default) means the host home directory itself.  The bind mount maps host HOME → `/tmp/.devcontainer-host-home`, so the setup script appends the relative path directly:
+`globalConfigHome` and `projectConfigFolder` accept either a **relative path** (resolved under the host home directory) or an **absolute path** (used as-is inside the container). An empty value (the default) means the host home directory itself.
 
-```
-option value    = claude-settings          (relative to host HOME)
-mounted path    = /tmp/.devcontainer-host-home/claude-settings
-```
+| Option value | Effective container path |
+|---|---|
+| `` (empty) | `/tmp/.devcontainer-host-home` (host HOME) |
+| `claude-settings` | `/tmp/.devcontainer-host-home/claude-settings` |
+| `/custom/mount/configs` | `/custom/mount/configs` |
+
+Relative paths are useful when the config directory lives somewhere under the host home directory. Absolute paths are useful when you have added an extra bind mount in your `devcontainer.json` pointing to a directory outside the host home.
 
 ### Symlink behaviour
 
@@ -47,4 +50,4 @@ Because the symlink targets are inside the bind mount, writes from the container
 
 - Claude Code is installed globally via npm.
 - Config linking happens during postCreateCommand, not via a login profile hook.
-- Both globalConfigHome and projectConfigFolder are resolved relative to host home.
+- Both globalConfigHome and projectConfigFolder accept relative paths (resolved under host home) or absolute container paths.
