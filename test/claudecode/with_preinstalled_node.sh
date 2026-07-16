@@ -16,9 +16,4 @@ check "node version is v20"     bash -c 'node --version | grep -q "^v20\."'
 check "claude installed"        command -v claude
 check "claude runs"             claude --version
 
-# --- Setup infrastructure from install.sh ---
-check "setup script exists"     test -f /usr/local/share/claude-devcontainer/setup.sh
-check "setup script executable" test -x /usr/local/share/claude-devcontainer/setup.sh
-check "feature options env exists" test -f /usr/local/share/claude-devcontainer/feature-options.env
-
 reportResults

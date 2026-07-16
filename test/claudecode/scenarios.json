@@ -5,22 +5,6 @@
             "claudecode": {}
         }
     },
-    "with_global_config": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-        "features": {
-            "claudecode": {
-                "globalConfigHome": "claude-test-global"
-            }
-        }
-    },
-    "with_project_config": {
-        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-        "features": {
-            "claudecode": {
-                "projectConfigFolder": "claude-test-project"
-            }
-        }
-    },
     "with_preinstalled_node": {
         "image": "node:20-bookworm",
         "features": {

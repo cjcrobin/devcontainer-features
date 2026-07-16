@@ -2,35 +2,14 @@
   "name": "Claude Code",
   "id": "claudecode",
   "version": "1.0.1",
-  "description": "Installs Claude Code CLI (@anthropic-ai/claude-code) globally via npm. Mounts selected Claude config files from the host machine into the container at creation time.",
+  "description": "Installs Claude Code CLI (@anthropic-ai/claude-code) globally via npm.",
   "options": {
     "version": {
       "type": "string",
       "default": "latest",
       "description": "Version of @anthropic-ai/claude-code to install (e.g. 'latest', '1.0.17'). Passed directly to 'npm install -g'."
-    },
-    "globalConfigHome": {
-      "type": "string",
-      "default": "",
-      "description": "Path whose .claude/ sub-directory and .claude.json are linked into the container's ~/.claude/ and ~/.claude.json. Relative paths are resolved under the host home directory; absolute paths are used as-is inside the container. Defaults to the host home directory itself (empty string = home root)."
-    },
-    "projectConfigFolder": {
-      "type": "string",
-      "default": "",
-      "description": "Path whose .claude/ sub-directory and .claude.json are linked into ${workspaceFolder}/.claude/ and ${workspaceFolder}/.claude.json. Relative paths are resolved under the host home directory; absolute paths are used as-is inside the container. Leave empty to skip project-level config."
     }
   },
-  "containerEnv": {
-    "_CLAUDE_HOST_HOME": "/tmp/.devcontainer-host-home"
-  },
-  "mounts": [
-    {
-      "source": "${localEnv:HOME}",
-      "target": "/tmp/.devcontainer-host-home",
-      "type": "bind"
-    }
-  ],
-  "postCreateCommand": "/usr/local/share/claude-devcontainer/setup.sh",
   "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/master/src/claudecode",
   "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/master/LICENSE",
   "customizations": {
