@@ -1,0 +1,30 @@
+{
+    "basic": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "playwright-cli": {}
+        }
+    },
+    "with_preinstalled_node": {
+        "image": "node:20-bookworm",
+        "features": {
+            "playwright-cli": {}
+        }
+    },
+    "alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "playwright-cli": {
+                "installSkills": false
+            }
+        }
+    },
+    "no_skills": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "playwright-cli": {
+                "installSkills": false
+            }
+        }
+    }
+}
