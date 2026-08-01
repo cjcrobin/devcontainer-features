@@ -1,0 +1,13 @@
+{
+    "id": "gq-java-template",
+    "version": "1.0.0",
+    "name": "gq default java template",
+    "description": "A pre-configured Dev Container for specific language stacks.",
+    "options": {
+        "projectName": {
+            "type": "string",
+            "description": "请输入你的项目名称",
+            "default": "my-awesome-project"
+        }
+    }
+}

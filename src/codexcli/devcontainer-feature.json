@@ -1,0 +1,15 @@
+{
+  "name": "Codex CLI",
+  "id": "codexcli",
+  "version": "1.0.0",
+  "description": "Installs OpenAI Codex CLI using the standalone installer (pre-built static binary, works on all Linux distributions).",
+  "options": {},
+  "documentationURL": "https://github.com/cjcrobin/devcontainer-features/tree/master/src/codexcli",
+  "licenseURL": "https://github.com/cjcrobin/devcontainer-features/blob/master/LICENSE",
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+  "installsAfter": []
+}
