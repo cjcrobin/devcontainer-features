@@ -7,6 +7,8 @@ This repository contains [Dev Container Features](https://containers.dev/impleme
 | Feature | Description | Usage |
 |---------|-------------|-------|
 | [claudecode](src/claudecode) | Claude Code CLI (`@anthropic-ai/claude-code`) | `ghcr.io/cjcrobin/devcontainer-features/claudecode:1` |
+| [codexcli](src/codexcli) | OpenAI Codex CLI (standalone binary) | `ghcr.io/cjcrobin/devcontainer-features/codexcli:1` |
+| [playwright-cli](src/playwright-cli) | Playwright CLI (`@playwright/cli`) | `ghcr.io/cjcrobin/devcontainer-features/playwright-cli:1` |
 | [qodercli](src/qodercli) | Qoder CLI (Global & China editions) | `ghcr.io/cjcrobin/devcontainer-features/qodercli:1` |
 
 ## Usage
@@ -66,6 +68,62 @@ Mounts `.claude/` and `.claude.json` from the host so credentials and settings s
 
 ---
 
+### Codex CLI
+
+Installs [OpenAI Codex CLI](https://github.com/openai/codex) via the official standalone installer. Downloads a pre-built statically-linked (musl) binary — works on **all Linux distributions** with no runtime dependencies.
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/codexcli:1": {}
+    }
+}
+```
+
+No options — no presets. Run `codex` after container creation to sign in or configure your environment.
+
+---
+
+### Playwright CLI — Default
+
+Installs [Playwright CLI](https://github.com/microsoft/playwright-cli) (`@playwright/cli`) globally via npm. Provides a token-efficient CLI interface for browser automation, designed for coding agents.
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/playwright-cli:1": {}
+    }
+}
+```
+
+### Playwright CLI — Pinned version, skip skills
+
+```json
+{
+    "name": "My Dev Container",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/cjcrobin/devcontainer-features/playwright-cli:1": {
+            "version": "0.1.17",
+            "installSkills": false
+        }
+    }
+}
+```
+
+### Playwright CLI Options
+
+| Option | Description | Default |
+|--------|-------------|--------|
+| `version` | Version of `@playwright/cli` to install (e.g. `latest`, `0.1.17`) | `latest` |
+| `installSkills` | Run `playwright-cli install --skills` after installation | `true` |
+
+---
+
 ### Qoder CLI — Global Edition (default)
 
 ```json
@@ -110,6 +168,8 @@ devcontainer features publish ./src --namespace cjcrobin/devcontainer-features
 
 ```bash
 devcontainer features test -f claudecode .
+devcontainer features test -f codexcli .
+devcontainer features test -f playwright-cli .
 devcontainer features test -f qodercli .
 ```
 
@@ -139,6 +199,14 @@ devcontainer features test --skip-scenarios -f qodercli -i mcr.microsoft.com/dev
 │   │   ├── install.sh
 │   │   ├── NOTES.md
 │   │   └── README.md
+│   ├── codexcli/           # OpenAI Codex CLI feature
+│   │   ├── devcontainer-feature.json
+│   │   ├── install.sh
+│   │   └── README.md
+│   ├── playwright-cli/     # Playwright CLI feature
+│   │   ├── devcontainer-feature.json
+│   │   ├── install.sh
+│   │   └── README.md
 │   └── qodercli/           # Qoder CLI feature (Global & CN)
 │       ├── devcontainer-feature.json
 │       ├── install.sh
@@ -153,6 +221,19 @@ devcontainer features test --skip-scenarios -f qodercli -i mcr.microsoft.com/dev
 │   │   ├── with_config_home.sh
 │   │   ├── with_global_config.sh
 │   │   └── with_project_config.sh
+│   ├── codexcli/           # Tests for codexcli
+│   │   ├── alpine.sh
+│   │   ├── basic.sh
+│   │   ├── fedora.sh
+│   │   ├── scenarios.json
+│   │   └── test.sh
+│   ├── playwright-cli/     # Tests for playwright-cli
+│   │   ├── alpine.sh
+│   │   ├── basic.sh
+│   │   ├── no_skills.sh
+│   │   ├── scenarios.json
+│   │   ├── test.sh
+│   │   └── with_preinstalled_node.sh
 │   └── qodercli/           # Tests for qodercli
 │       ├── basic.sh
 │       ├── cn.sh
