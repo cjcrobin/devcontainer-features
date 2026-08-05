@@ -1,0 +1,133 @@
+{
+    "name": "${templateOption:projectName}",
+    "image": "${templateOption:image}",
+    // 👇 Features to add to the Dev Container. More info: https://containers.dev/implementors/features.
+    "features": {
+        "ghcr.io/devcontainers/features/node": {
+            "version": "20"
+        }
+    },
+    // 👇 Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
+    // 👇 Configure tool-specific properties.
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "${templateOption:langExtension}",
+                "eamodio.gitlens",
+                "humao.rest-client",
+                "cweijan.vscode-mysql-client2"
+            ]
+        }
+    },
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+    "mounts": [
+        // ===== 基础 =====
+        // [Java only] Maven 本地仓库缓存 volume（Python 镜像可删除此条）
+        {
+            "type": "volume",
+            "source": "maven-repo",
+            "target": "/home/vscode/.m2/repository"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/.devcontainer/${templateOption:projectName}",
+            "target": "${containerWorkspaceFolder}/.devcontainer"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/.vscode/${templateOption:projectName}-settings.json",
+            "target": "${containerWorkspaceFolder}/.vscode/settings.json"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/http/${templateOption:projectName}",
+            "target": "${containerWorkspaceFolder}/http"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/docs/${templateOption:projectName}",
+            "target": "${containerWorkspaceFolder}/docs"
+        },
+        // ===== qodercli =====
+        {
+            "type": "bind",
+            "source": "${localEnv:HOME}/.qoder-cn",
+            "target": "/home/vscode/.qoder-cn"
+        },
+        {
+            "type": "bind",
+            "source": "${localEnv:HOME}/.qoder",
+            "target": "/home/vscode/.qoder"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/qoder/${templateOption:projectName}/project/.qoder/agents",
+            "target": "${containerWorkspaceFolder}/.qoder/agents"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/qoder/${templateOption:projectName}/project/.qoder/hooks",
+            "target": "${containerWorkspaceFolder}/.qoder/hooks"
+        },
+        // ===== claudecode =====
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/agents",
+            "target": "${containerWorkspaceFolder}/.claude/agents"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/hooks",
+            "target": "${containerWorkspaceFolder}/.claude/hooks"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/rules",
+            "target": "${containerWorkspaceFolder}/.claude/rules"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/skills",
+            "target": "${containerWorkspaceFolder}/.claude/skills"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/docs",
+            "target": "${containerWorkspaceFolder}/.claude/docs"
+        },
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/claude/${templateOption:projectName}/project/.claude/CLAUDE.md",
+            "target": "${containerWorkspaceFolder}/.claude/CLAUDE.md"
+        },
+        {
+            "type": "bind",
+            "source": "${localEnv:HOME}/.claude/settings.json",
+            "target": "/home/vscode/.claude/settings.json"
+        },
+        {
+            "type": "bind",
+            "source": "${localEnv:HOME}/.claude.json",
+            "target": "/home/vscode/.claude.json"
+        },
+        {
+            "type": "bind",
+            "source": "/dev/null",
+            "target": "${containerWorkspaceFolder}/CLAUDE.md"
+        },
+        // ===== codexcli =====
+        {
+            "type": "bind",
+            "source": "${localWorkspaceFolder}/codex/${templateOption:projectName}/project/.codex/agents",
+            "target": "${containerWorkspaceFolder}/.codex/agents"
+        }
+    ],
+    "remoteEnv": {
+        "LANG": "en_US.UTF-8",
+        "LC_ALL": "en_US.UTF-8"
+    },
+    "workspaceMount": "source=${localWorkspaceFolder}/${templateOption:projectName},target=/workspace,type=bind,consistency=delegated",
+    "workspaceFolder": "/workspace",
+    "containerUser": "vscode"
+}

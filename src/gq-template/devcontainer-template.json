@@ -1,0 +1,31 @@
+{
+    "id": "gq-template",
+    "version": "1.1.0",
+    "name": "GQ Dev Container Template",
+    "description": "[Private Usage. it is not for public general usage.] A pre-configured Dev Container for Java or Python projects, with optional AI tool integrations (Claude Code, Codex CLI, Qoder CLI).",
+    "options": {
+        "projectName": {
+            "type": "string",
+            "description": "项目名称（用于容器命名和目录路径，如 my-project）",
+            "default": "my-project"
+        },
+        "image": {
+            "type": "string",
+            "enum": [
+                "mcr.microsoft.com/devcontainers/java:dev-8-jdk-trixie",
+                "mcr.microsoft.com/devcontainers/python:3.12"
+            ],
+            "default": "mcr.microsoft.com/devcontainers/java:dev-8-jdk-trixie",
+            "description": "基础开发镜像（Java 或 Python）"
+        },
+        "langExtension": {
+            "type": "string",
+            "enum": [
+                "vscjava.vscode-java-pack",
+                "ms-python.python"
+            ],
+            "default": "vscjava.vscode-java-pack",
+            "description": "语言扩展包（与镜像保持一致）"
+        }
+    }
+}
