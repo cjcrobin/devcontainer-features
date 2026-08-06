@@ -1,10 +1,9 @@
-# Playwright CLI
 
-Installs [Playwright CLI](https://github.com/microsoft/playwright-cli) (`@playwright/cli`) globally via npm.
+# Playwright CLI (playwright-cli)
 
-Playwright CLI provides a token-efficient CLI interface for browser automation, designed for coding agents such as Claude Code and GitHub Copilot.
+Installs Playwright CLI (@playwright/cli) globally via npm. Supports Ubuntu/Debian, Alpine, RHEL/Fedora/CentOS and other Linux distributions.
 
-## Usage
+## Example Usage
 
 ```json
 "features": {
@@ -14,36 +13,13 @@ Playwright CLI provides a token-efficient CLI interface for browser automation, 
 
 ## Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `version` | string | `latest` | Version of `@playwright/cli` to install (e.g. `latest`, `0.1.17`). |
-| `installSkills` | boolean | `true` | Run `playwright-cli install --skills` after installation to install Playwright skills for coding agents. |
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| version | Version of @playwright/cli to install (e.g. 'latest', '0.1.17'). Passed directly to 'npm install -g'. | string | latest |
+| installSkills | Run 'playwright-cli install --skills' after installation to install Playwright skills for coding agents. | boolean | true |
 
-## Requirements
 
-- Node.js 18 or newer (installed automatically if not present)
 
-## Supported Distributions
+---
 
-| Distribution | Package Manager |
-|---|---|
-| Ubuntu / Debian | `apt-get` + NodeSource |
-| Alpine Linux | `apk` |
-| Fedora / RHEL / CentOS | `dnf` / `yum` |
-
-## Example: Pin a specific version
-
-```json
-"features": {
-    "ghcr.io/cjcrobin/devcontainer-features/playwright-cli:1": {
-        "version": "0.1.17",
-        "installSkills": false
-    }
-}
-```
-
-## Notes
-
-- If Node.js >= 18 is already present in the image, the feature will skip Node installation.
-- Playwright skills are installed at feature-build time so that coding agents can discover and use them immediately.
-- See [playwright-cli documentation](https://github.com/microsoft/playwright-cli) for available commands.
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/cjcrobin/devcontainer-features/blob/main/src/playwright-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
