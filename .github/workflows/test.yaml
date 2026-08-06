@@ -16,6 +16,8 @@ jobs:
         features:
           - qodercli
           - claudecode
+          - codexcli
+          - playwright-cli
         baseImage:
           - debian:latest
           - ubuntu:latest
@@ -37,6 +39,8 @@ jobs:
         features:
           - qodercli
           - claudecode
+          - codexcli
+          - playwright-cli
     steps:
       - uses: actions/checkout@v4
 
