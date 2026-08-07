@@ -1,8 +1,9 @@
+
 # Codex CLI (codexcli)
 
-Installs [OpenAI Codex CLI](https://github.com/openai/codex) using the official standalone installer. The installer downloads a pre-built statically-linked (musl) binary, so it works on **all Linux distributions** without requiring Node.js or any other runtime.
+Installs OpenAI Codex CLI using the standalone installer (pre-built static binary, works on all Linux distributions).
 
-## Usage
+## Example Usage
 
 ```json
 "features": {
@@ -10,13 +11,14 @@ Installs [OpenAI Codex CLI](https://github.com/openai/codex) using the official 
 }
 ```
 
-## How It Works
+## Options
 
-1. Detects the available package manager (apt-get, apk, dnf, yum, zypper, pacman).
-2. Ensures `curl` and `ca-certificates` are installed (installs them if missing).
-3. Runs the official installer: `curl -fsSL https://chatgpt.com/codex/install.sh | sh`
-4. Verifies the `codex` binary is available and symlinks it to `/usr/local/bin` for system-wide access.
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
 
-## No Presets
 
-This feature does not configure any API keys, models, or preferences. Run `codex` after container creation to sign in or set up your environment.
+
+
+---
+
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/cjcrobin/devcontainer-features/blob/main/src/codexcli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
